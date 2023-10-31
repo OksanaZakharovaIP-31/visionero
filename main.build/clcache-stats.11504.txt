@@ -1,8 +1,8 @@
 {
-    "CacheEntries": 327,
-    "CacheHits": 344,
-    "CacheMisses": 327,
-    "CacheSize": 81417260,
+    "CacheEntries": 3,
+    "CacheHits": 668,
+    "CacheMisses": 3,
+    "CacheSize": 468542,
     "CallsForExternalDebugInfo": 0,
     "CallsForLinking": 0,
     "CallsForPreprocessing": 0,

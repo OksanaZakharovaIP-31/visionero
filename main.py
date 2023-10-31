@@ -78,9 +78,17 @@ async def on_startup():
         for k in all_apps:
             statement = select(AppOnComputer).filter_by(name=k)
             app_name = session.scalars(statement).all()
-            if k != app_name[0].name:
-                print('true')
-                if k in working_app:
+            app_name_from_exe = all_apps[k].split('\\')[-1].split('.')[0]
+            try:
+                app_name[0].name
+                if k != app_name[0].name:
+                    if app_name_from_exe in working_app:
+                        new_line = AppOnComputer(name=k, path=all_apps[k], active=True)
+                    else:
+                        new_line = AppOnComputer(name=k, path=all_apps[k], active=False)
+                    to_add.append(new_line)
+            except:
+                if app_name_from_exe in working_app:
                     new_line = AppOnComputer(name=k, path=all_apps[k], active=True)
                 else:
                     new_line = AppOnComputer(name=k, path=all_apps[k], active=False)

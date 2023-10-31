@@ -1,5 +1,4 @@
-from subprocess import getoutput
-from json import loads
+import json
 import os
 import subprocess
 import psutil
@@ -11,13 +10,16 @@ def get_apps():
     App is app with .exe format in their path
     :return: dict
     """
-    cmd = 'powershell -ExecutionPolicy Bypass "Get-StartApps|convertto-json"'
-    apps = loads(getoutput(cmd))
-    names = {}
-    for each in apps:
-        if each['AppID'].endswith('.exe'):
-            names.update({each['Name']: each['AppID']})
-    return names
+    command = 'powershell.exe "Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName, DisplayIcon| convertto-json"'
+    k = subprocess.run(command, stdout=subprocess.PIPE, shell=True, creationflags=0x08000000)
+    k = k.stdout
+    k = k.decode('Windows-1251')
+    all_apps = json.loads(k)
+    apps_with_exe = {}
+    for app in all_apps:
+        if app['DisplayIcon'] is not None and app['DisplayName'] is not None:
+            apps_with_exe.update({app['DisplayName']: app['DisplayIcon'].split(',')[0]})
+    return apps_with_exe
 
 
 def get_working_apps():
